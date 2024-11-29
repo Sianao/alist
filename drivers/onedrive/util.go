@@ -128,12 +128,11 @@ func (d *Onedrive) Request(url string, method string, callback base.ReqCallback,
 func (d *Onedrive) getFiles(path string, page model.PageReq) ([]File, error) {
 	var res []File
 	var nextLink string
-	if page.Page == 0 || page.PerPage == 0 {
+	if page.PerPage == 0 {
 		nextLink = d.GetMetaUrl(false, path) + ("/children?$top=5000&$expand=thumbnails($select=medium)&$select=id,name,size,fileSystemInfo,content.downloadUrl,file,parentReference")
 	} else {
 		if page.Page > 1 {
 			nextLink = d.GetMetaUrl(false, path) + fmt.Sprintf("/children?$top=%d$skip=%d&$expand=thumbnails($select=medium)&$select=id,name,size,fileSystemInfo,content.downloadUrl,file,parentReference", page.PerPage, (page.Page-1)*page.PerPage)
-
 		} else {
 			nextLink = d.GetMetaUrl(false, path) + fmt.Sprintf("/children?$top=%d&$expand=thumbnails($select=medium)&$select=id,name,size,fileSystemInfo,content.downloadUrl,file,parentReference", page.PerPage)
 		}
