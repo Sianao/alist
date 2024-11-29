@@ -2,6 +2,7 @@ package fs
 
 import (
 	"context"
+
 	"github.com/alist-org/alist/v3/internal/driver"
 	"github.com/alist-org/alist/v3/internal/model"
 	"github.com/alist-org/alist/v3/internal/op"
@@ -14,6 +15,7 @@ import (
 // then pass the actual path to the op package
 
 type ListArgs struct {
+	Page    model.PageReq
 	Refresh bool
 	NoLog   bool
 }
