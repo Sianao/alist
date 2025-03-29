@@ -37,7 +37,6 @@ jobs:
         run: |
           git tag -l
           npx changelogithub --output CHANGELOG.md
-#          npx changelogen@latest --output CHANGELOG.md
 
       - name: Upload assets
         uses: softprops/action-gh-release@v2
@@ -115,7 +114,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
-          repository: sianao/desktop-release
+          repository: sianao/alist
           ref: main
           persist-credentials: false
           fetch-depth: 0
@@ -130,4 +129,4 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           branch: main
-          repository: sianao/desktop-release
+          repository: sianao/alist
