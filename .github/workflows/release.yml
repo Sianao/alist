@@ -35,6 +35,7 @@ jobs:
         with:
           id: ${{ github.event.release.id }}
           prerelease: true
+          token: ${{secrets.GITHUB_TOKEN}}
 
       - name: Setup Go
         uses: actions/setup-go@v5
