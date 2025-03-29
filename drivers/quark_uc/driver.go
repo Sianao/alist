@@ -8,6 +8,7 @@ import (
 	"encoding/hex"
 	"io"
 	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/alist-org/alist/v3/drivers/base"
@@ -66,9 +67,15 @@ func (d *QuarkOrUC) Link(ctx context.Context, file model.Obj, args model.LinkArg
 	if err != nil {
 		return nil, err
 	}
-
+	addr, err := url.Parse(resp.Data[0].DownloadUrl)
+	if err != nil {
+		return nil, err
+	}
+	query := addr.Query()
+	query.Del("x-oss-traffic-limit")
+	addr.RawQuery = query.Encode()
 	return &model.Link{
-		URL: resp.Data[0].DownloadUrl,
+		URL: addr.String(),
 		Header: http.Header{
 			"Cookie":     []string{d.Cookie},
 			"Referer":    []string{d.conf.referer},
