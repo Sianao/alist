@@ -71,7 +71,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
-          repository: alist-org/desktop-release
+          repository: sianao/desktop-release
           ref: main
           persist-credentials: false
           fetch-depth: 0
@@ -87,4 +87,4 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           branch: main
-          repository: alist-org/desktop-release
+          repository: sianao/desktop-release
