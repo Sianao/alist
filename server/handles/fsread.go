@@ -83,7 +83,7 @@ func FsList(c *gin.Context) {
 		common.ErrorStrResp(c, "Refresh without permission", 403)
 		return
 	}
-	objs, err := fs.List(c, reqPath, &fs.ListArgs{Refresh: req.Refresh})
+	objs, err := fs.List(c, reqPath, &fs.ListArgs{Refresh: req.Refresh, Page: req.PageReq})
 	if err != nil {
 		common.ErrorResp(c, err, 500)
 		return

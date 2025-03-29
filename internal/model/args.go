@@ -11,6 +11,7 @@ import (
 )
 
 type ListArgs struct {
+	Page              PageReq
 	ReqPath           string
 	S3ShowPlaceholder bool
 	Refresh           bool

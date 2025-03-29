@@ -18,6 +18,7 @@ import (
 // then pass the actual path to the op package
 
 type ListArgs struct {
+	Page    model.PageReq
 	Refresh bool
 	NoLog   bool
 }

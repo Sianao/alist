@@ -80,7 +80,7 @@ func (d *Onedrive) GetRoot(ctx context.Context) (model.Obj, error) {
 }
 
 func (d *Onedrive) List(ctx context.Context, dir model.Obj, args model.ListArgs) ([]model.Obj, error) {
-	files, err := d.getFiles(dir.GetPath())
+	files, err := d.getFiles(dir.GetPath(), args)
 	if err != nil {
 		return nil, err
 	}

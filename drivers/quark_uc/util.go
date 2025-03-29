@@ -56,20 +56,48 @@ func (d *QuarkOrUC) request(pathname string, method string, callback base.ReqCal
 	return res.Body(), nil
 }
 
-func (d *QuarkOrUC) GetFiles(parent string) ([]File, error) {
+func (d *QuarkOrUC) GetFiles(parent string, args model.ListArgs) ([]File, error) {
 	files := make([]File, 0)
-	page := 1
-	size := 100
-	query := map[string]string{
-		"pdir_fid":     parent,
-		"_size":        strconv.Itoa(size),
-		"_fetch_total": "1",
-	}
-	if d.OrderBy != "none" {
-		query["_sort"] = "file_type:asc," + d.OrderBy + ":" + d.OrderDirection
-	}
-	for {
-		query["_page"] = strconv.Itoa(page)
+
+	if args.Page.PerPage == 0 {
+		var page int
+		var size int
+		page = 1
+		size = 100
+		query := map[string]string{
+			"pdir_fid":     parent,
+			"_size":        strconv.Itoa(size),
+			"_fetch_total": "1",
+		}
+		if d.OrderBy != "none" {
+			query["_sort"] = "file_type:asc," + d.OrderBy + ":" + d.OrderDirection
+		}
+		for {
+			query["_page"] = strconv.Itoa(page)
+			var resp SortResp
+			_, err := d.request("/file/sort", http.MethodGet, func(req *resty.Request) {
+				req.SetQueryParams(query)
+			}, &resp)
+			if err != nil {
+				return nil, err
+			}
+			files = append(files, resp.Data.List...)
+			if page*size >= resp.Metadata.Total {
+				break
+			}
+			page++
+		}
+		return files, nil
+	} else {
+		query := map[string]string{
+			"pdir_fid":     parent,
+			"_size":        strconv.Itoa(args.Page.PerPage),
+			"_fetch_total": "1",
+		}
+		if d.OrderBy != "none" {
+			query["_sort"] = "file_type:asc," + d.OrderBy + ":" + d.OrderDirection
+		}
+		query["_page"] = strconv.Itoa(args.Page.Page)
 		var resp SortResp
 		_, err := d.request("/file/sort", http.MethodGet, func(req *resty.Request) {
 			req.SetQueryParams(query)
@@ -77,13 +105,9 @@ func (d *QuarkOrUC) GetFiles(parent string) ([]File, error) {
 		if err != nil {
 			return nil, err
 		}
-		files = append(files, resp.Data.List...)
-		if page*size >= resp.Metadata.Total {
-			break
-		}
-		page++
+		return resp.Data.List, nil
 	}
-	return files, nil
+
 }
 
 func (d *QuarkOrUC) upPre(file model.FileStreamer, parentId string) (UpPreResp, error) {
